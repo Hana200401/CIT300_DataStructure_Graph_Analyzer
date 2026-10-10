@@ -1,73 +1,47 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class QueueOperations {
-    private int[] queue = new int[100];
-    private int front = 0, rear = -1, count = 0;
+    private QueueOperations() {
+    }
 
-    public void menu(Scanner sc) {
-        while (true) {
-            System.out.println("\n--- QUEUE OPERATIONS ---");
+    public static void run(Scanner scanner) {
+        Queue<Integer> queue = new ArrayDeque<Integer>();
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n--- Queue operations (FIFO) ---");
             System.out.println("1. Enqueue");
             System.out.println("2. Dequeue");
-            System.out.println("3. Peek/Front");
+            System.out.println("3. Peek");
             System.out.println("4. Display");
-            System.out.println("5. Return to Main Menu");
-            System.out.print("Enter choice: ");
-            int ch = Main.getValidInt(sc);
+            System.out.println("0. Back");
+            int choice = Main.readInt(scanner, "Choose an option: ");
 
-            switch (ch) {
-                case 1 -> {
-                    System.out.print("Enter value to enqueue: ");
-                    enqueue(Main.getValidInt(sc));
-                }
-                case 2 -> dequeue();
-                case 3 -> peek();
-                case 4 -> display();
-                case 5 -> { return; }
-                default -> System.out.println("Invalid choice!");
+            switch (choice) {
+                case 1:
+                    queue.offer(Main.readInt(scanner, "Value to enqueue: "));
+                    break;
+                case 2:
+                    if (queue.isEmpty()) {
+                        System.out.println("Queue is empty.");
+                    } else {
+                        System.out.println("Dequeued: " + queue.remove());
+                    }
+                    break;
+                case 3:
+                    System.out.println(queue.isEmpty() ? "Queue is empty." : "Front: " + queue.peek());
+                    break;
+                case 4:
+                    System.out.println(queue);
+                    break;
+                case 0:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Please choose a listed option.");
             }
         }
-    }
-
-    public void enqueue(int val) {
-        if (count == queue.length) {
-            System.out.println("Queue is full!");
-            return;
-        }
-        rear = (rear + 1) % queue.length;
-        queue[rear] = val;
-        count++;
-        System.out.println(val + " enqueued. Size = " + count);
-    }
-
-    public void dequeue() {
-        if (count == 0) {
-            System.out.println("Queue is empty! Cannot dequeue.");
-            return;
-        }
-        int val = queue[front];
-        front = (front + 1) % queue.length;
-        count--;
-        System.out.println(val + " dequeued.");
-    }
-
-    public void peek() {
-        if (count == 0) {
-            System.out.println("Queue is empty!");
-            return;
-        }
-        System.out.println("Front element: " + queue[front]);
-    }
-
-    public void display() {
-        if (count == 0) {
-            System.out.println("Queue is empty!");
-            return;
-        }
-        System.out.print("Queue (front to rear): ");
-        for (int i = 0; i < count; i++) {
-            System.out.print(queue[(front + i) % queue.length] + " ");
-        }
-        System.out.println();
     }
 }
