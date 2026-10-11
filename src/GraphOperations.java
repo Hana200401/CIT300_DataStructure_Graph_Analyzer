@@ -1,115 +1,121 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class GraphOperations {
-    private GraphOperations() {
-    }
+    private Map<String, List<String>> adjList = new LinkedHashMap<>();
 
-    public static void run(Scanner scanner) {
-        Map<Integer, Set<Integer>> graph = new LinkedHashMap<Integer, Set<Integer>>();
-        boolean running = true;
+    public void menu(Scanner sc) {
+        while (true) {
+            System.out.println("\n--- GRAPH OPERATIONS ---");
+            System.out.println("1. Add Vertex");
+            System.out.println("2. Add Edge");
+            System.out.println("3. Display Graph");
+            System.out.println("4. BFS Traversal");
+            System.out.println("5. DFS Traversal");
+            System.out.println("6. Return to Main Menu");
+            System.out.print("Enter choice: ");
+            int ch = Main.getValidInt(sc);
+            sc.nextLine();
 
-        while (running) {
-            System.out.println("\n--- Undirected graph operations ---");
-            System.out.println("1. Add vertex");
-            System.out.println("2. Add edge");
-            System.out.println("3. Display adjacency list");
-            System.out.println("4. Breadth-first traversal");
-            System.out.println("5. Depth-first traversal");
-            System.out.println("0. Back");
-            int choice = Main.readInt(scanner, "Choose an option: ");
-
-            switch (choice) {
-                case 1:
-                    addVertex(graph, Main.readInt(scanner, "Vertex label: "));
-                    break;
-                case 2:
-                    int from = Main.readInt(scanner, "First vertex: ");
-                    int to = Main.readInt(scanner, "Second vertex: ");
-                    addEdge(graph, from, to);
-                    break;
-                case 3:
-                    display(graph);
-                    break;
-                case 4:
-                    traverse(graph, Main.readInt(scanner, "Starting vertex: "), false);
-                    break;
-                case 5:
-                    traverse(graph, Main.readInt(scanner, "Starting vertex: "), true);
-                    break;
-                case 0:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Please choose a listed option.");
-            }
-        }
-    }
-
-    private static void addVertex(Map<Integer, Set<Integer>> graph, int vertex) {
-        graph.putIfAbsent(vertex, new LinkedHashSet<Integer>());
-        System.out.println("Vertex " + vertex + " is in the graph.");
-    }
-
-    private static void addEdge(Map<Integer, Set<Integer>> graph, int from, int to) {
-        addVertex(graph, from);
-        addVertex(graph, to);
-        graph.get(from).add(to);
-        graph.get(to).add(from);
-        System.out.println("Added edge " + from + " - " + to + ".");
-    }
-
-    private static void display(Map<Integer, Set<Integer>> graph) {
-        if (graph.isEmpty()) {
-            System.out.println("Graph is empty.");
-            return;
-        }
-        for (Map.Entry<Integer, Set<Integer>> entry : graph.entrySet()) {
-            System.out.println(entry.getKey() + " -> " + entry.getValue());
-        }
-    }
-
-    private static void traverse(Map<Integer, Set<Integer>> graph, int start, boolean depthFirst) {
-        if (!graph.containsKey(start)) {
-            System.out.println("Starting vertex is not in the graph.");
-            return;
-        }
-
-        Set<Integer> visited = new LinkedHashSet<Integer>();
-        Deque<Integer> pending = new ArrayDeque<Integer>();
-        List<Integer> order = new ArrayList<Integer>();
-        pending.add(start);
-
-        while (!pending.isEmpty()) {
-            int current = depthFirst ? pending.removeLast() : pending.removeFirst();
-            if (!visited.add(current)) {
-                continue;
-            }
-            order.add(current);
-            List<Integer> neighbors = new ArrayList<Integer>(graph.get(current));
-            if (depthFirst) {
-                for (int i = neighbors.size() - 1; i >= 0; i--) {
-                    if (!visited.contains(neighbors.get(i))) {
-                        pending.addLast(neighbors.get(i));
-                    }
+            switch (ch) {
+                case 1 -> {
+                    System.out.print("Enter vertex name: ");
+                    addVertex(sc.nextLine().trim());
                 }
-            } else {
-                for (Integer neighbor : neighbors) {
-                    if (!visited.contains(neighbor)) {
-                        pending.addLast(neighbor);
-                    }
+                case 2 -> {
+                    System.out.print("Enter source vertex: ");
+                    String src = sc.nextLine().trim();
+                    System.out.print("Enter destination vertex: ");
+                    String dest = sc.nextLine().trim();
+                    addEdge(src, dest);
+                }
+                case 3 -> displayGraph();
+                case 4 -> {
+                    System.out.print("Enter start vertex for BFS: ");
+                    bfs(sc.nextLine().trim());
+                }
+                case 5 -> {
+                    System.out.print("Enter start vertex for DFS: ");
+                    dfs(sc.nextLine().trim());
+                }
+                case 6 -> { return; }
+                default -> System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    public void addVertex(String v) {
+        if (adjList.containsKey(v)) {
+            System.out.println("Vertex already exists!");
+            return;
+        }
+        adjList.put(v, new ArrayList<>());
+        System.out.println("Vertex " + v + " added.");
+    }
+
+    public void addEdge(String src, String dest) {
+        if (!adjList.containsKey(src) || !adjList.containsKey(dest)) {
+            System.out.println("Both vertices must exist first!");
+            return;
+        }
+        adjList.get(src).add(dest);
+        adjList.get(dest).add(src);
+        System.out.println("Edge added: " + src + " <-> " + dest);
+    }
+
+    public void displayGraph() {
+        if (adjList.isEmpty()) {
+            System.out.println("Graph is empty!");
+            return;
+        }
+        System.out.println("\nGraph Adjacency List:");
+        for (Map.Entry<String, List<String>> e : adjList.entrySet()) {
+            System.out.println("  " + e.getKey() + " -> " + e.getValue());
+        }
+    }
+
+    public void bfs(String start) {
+        if (!adjList.containsKey(start)) {
+            System.out.println("Start vertex not found!");
+            return;
+        }
+        Set<String> visited = new HashSet<>();
+        Queue<String> q = new LinkedList<>();
+        q.add(start);
+        visited.add(start);
+        int steps = 0;
+        System.out.print("BFS: ");
+        while (!q.isEmpty()) {
+            String node = q.poll();
+            System.out.print(node + " ");
+            steps++;
+            for (String n : adjList.get(node)) {
+                if (!visited.contains(n)) {
+                    visited.add(n);
+                    q.add(n);
                 }
             }
         }
+        System.out.println("\nSteps = " + steps + " | Complexity = O(V + E)");
+    }
 
-        System.out.println((depthFirst ? "Depth-first" : "Breadth-first")
-                + " traversal: " + order);
+    public void dfs(String start) {
+        if (!adjList.containsKey(start)) {
+            System.out.println("Start vertex not found!");
+            return;
+        }
+        Set<String> visited = new HashSet<>();
+        System.out.print("DFS: ");
+        int[] steps = {0};
+        dfsRec(start, visited, steps);
+        System.out.println("\nSteps = " + steps[0] + " | Complexity = O(V + E)");
+    }
+
+    private void dfsRec(String node, Set<String> visited, int[] steps) {
+        visited.add(node);
+        System.out.print(node + " ");
+        steps[0]++;
+        for (String n : adjList.get(node)) {
+            if (!visited.contains(n)) dfsRec(n, visited, steps);
+        }
     }
 }

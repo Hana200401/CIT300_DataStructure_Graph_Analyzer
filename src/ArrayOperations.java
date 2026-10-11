@@ -2,65 +2,84 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ArrayOperations {
-    private ArrayOperations() {
-    }
+    private int[] arr = new int[100];
+    private int size = 0;
+    private int stepCount = 0;
 
-    public static void run(Scanner scanner) {
-        int[] values = new int[0];
-        boolean running = true;
-
-        while (running) {
-            System.out.println("\n--- Array operations ---");
-            System.out.println("1. Create/replace array");
-            System.out.println("2. Display array");
-            System.out.println("3. Update element");
-            System.out.println("4. Sort array");
-            System.out.println("0. Back");
-            int choice = Main.readInt(scanner, "Choose an option: ");
-
-            switch (choice) {
-                case 1:
-                    int size = readNonNegativeInt(scanner, "Number of elements: ");
-                    values = new int[size];
-                    for (int i = 0; i < size; i++) {
-                        values[i] = Main.readInt(scanner, "Element " + i + ": ");
-                    }
-                    break;
-                case 2:
-                    System.out.println(Arrays.toString(values));
-                    break;
-                case 3:
-                    if (values.length == 0) {
-                        System.out.println("Create a non-empty array first.");
-                        break;
-                    }
-                    int index = Main.readInt(scanner, "Index to update (0-" + (values.length - 1) + "): ");
-                    if (index < 0 || index >= values.length) {
-                        System.out.println("Index is out of range.");
-                    } else {
-                        values[index] = Main.readInt(scanner, "New value: ");
-                    }
-                    break;
-                case 4:
-                    Arrays.sort(values);
-                    System.out.println("Array sorted.");
-                    break;
-                case 0:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Please choose a listed option.");
-            }
-        }
-    }
-
-    private static int readNonNegativeInt(Scanner scanner, String prompt) {
+    public void menu(Scanner sc) {
         while (true) {
-            int value = Main.readInt(scanner, prompt);
-            if (value >= 0) {
-                return value;
+            System.out.println("\n--- ARRAY OPERATIONS ---");
+            System.out.println("1. Insert");
+            System.out.println("2. Delete");
+            System.out.println("3. Search");
+            System.out.println("4. Display");
+            System.out.println("5. Return to Main Menu");
+            System.out.print("Enter choice: ");
+            int ch = Main.getValidInt(sc);
+
+            switch (ch) {
+                case 1 -> {
+                    System.out.print("Enter value to insert: ");
+                    insert(Main.getValidInt(sc));
+                }
+                case 2 -> {
+                    System.out.print("Enter value to delete: ");
+                    delete(Main.getValidInt(sc));
+                }
+                case 3 -> {
+                    System.out.print("Enter value to search: ");
+                    search(Main.getValidInt(sc));
+                }
+                case 4 -> display();
+                case 5 -> { return; }
+                default -> System.out.println("Invalid choice!");
             }
-            System.out.println("Enter zero or a positive number.");
         }
+    }
+
+    public void insert(int val) {
+        if (size >= arr.length) {
+            System.out.println("Array is full!");
+            return;
+        }
+        arr[size++] = val;
+        System.out.println(val + " inserted. Size = " + size);
+    }
+
+    public void delete(int val) {
+        stepCount = 0;
+        for (int i = 0; i < size; i++) {
+            stepCount++;
+            if (arr[i] == val) {
+                for (int j = i; j < size - 1; j++) {
+                    arr[j] = arr[j + 1];
+                    stepCount++;
+                }
+                size--;
+                System.out.println(val + " deleted. Steps = " + stepCount);
+                return;
+            }
+        }
+        System.out.println(val + " not found!");
+    }
+
+    public void search(int val) {
+        stepCount = 0;
+        for (int i = 0; i < size; i++) {
+            stepCount++;
+            if (arr[i] == val) {
+                System.out.println(val + " found at index " + i + ". Steps = " + stepCount);
+                return;
+            }
+        }
+        System.out.println(val + " not found! Steps = " + stepCount);
+    }
+
+    public void display() {
+        if (size == 0) {
+            System.out.println("Array is empty!");
+            return;
+        }
+        System.out.println("Array: " + Arrays.toString(Arrays.copyOf(arr, size)));
     }
 }

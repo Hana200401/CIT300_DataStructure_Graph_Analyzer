@@ -1,62 +1,72 @@
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class LinkedListOperations {
-    private LinkedListOperations() {
+    class Node {
+        int data;
+        Node next;
+        Node(int d) { data = d; next = null; }
     }
 
-    public static void run(Scanner scanner) {
-        LinkedList<Integer> values = new LinkedList<Integer>();
-        boolean running = true;
+    private Node head = null;
 
-        while (running) {
-            System.out.println("\n--- Linked list operations ---");
-            System.out.println("1. Add to end");
-            System.out.println("2. Insert at index");
-            System.out.println("3. Remove at index");
-            System.out.println("4. Search");
-            System.out.println("5. Display");
-            System.out.println("0. Back");
-            int choice = Main.readInt(scanner, "Choose an option: ");
+    public void menu(Scanner sc) {
+        while (true) {
+            System.out.println("\n--- LINKED LIST OPERATIONS ---");
+            System.out.println("1. Insert");
+            System.out.println("2. Delete");
+            System.out.println("3. Search");
+            System.out.println("4. Display");
+            System.out.println("5. Return to Main Menu");
+            System.out.print("Enter choice: ");
+            int ch = Main.getValidInt(sc);
 
-            switch (choice) {
-                case 1:
-                    values.add(Main.readInt(scanner, "Value to add: "));
-                    break;
-                case 2:
-                    int insertIndex = Main.readInt(scanner, "Insertion index (0-" + values.size() + "): ");
-                    if (insertIndex < 0 || insertIndex > values.size()) {
-                        System.out.println("Index is out of range.");
-                    } else {
-                        values.add(insertIndex, Main.readInt(scanner, "Value to insert: "));
-                    }
-                    break;
-                case 3:
-                    if (values.isEmpty()) {
-                        System.out.println("List is empty.");
-                        break;
-                    }
-                    int removeIndex = Main.readInt(scanner, "Removal index (0-" + (values.size() - 1) + "): ");
-                    if (removeIndex < 0 || removeIndex >= values.size()) {
-                        System.out.println("Index is out of range.");
-                    } else {
-                        System.out.println("Removed: " + values.remove(removeIndex));
-                    }
-                    break;
-                case 4:
-                    int target = Main.readInt(scanner, "Value to find: ");
-                    int foundAt = values.indexOf(target);
-                    System.out.println(foundAt >= 0 ? "Found at index " + foundAt : "Not found.");
-                    break;
-                case 5:
-                    System.out.println(values);
-                    break;
-                case 0:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Please choose a listed option.");
+            switch (ch) {
+                case 1 -> { System.out.print("Enter value to insert: "); insert(Main.getValidInt(sc)); }
+                case 2 -> { System.out.print("Enter value to delete: "); delete(Main.getValidInt(sc)); }
+                case 3 -> { System.out.print("Enter value to search: "); search(Main.getValidInt(sc)); }
+                case 4 -> display();
+                case 5 -> { return; }
+                default -> System.out.println("Invalid choice!");
             }
         }
+    }
+
+    public void insert(int val) {
+        Node newNode = new Node(val);
+        if (head == null) head = newNode;
+        else {
+            Node temp = head;
+            while (temp.next != null) temp = temp.next;
+            temp.next = newNode;
+        }
+        System.out.println(val + " inserted.");
+    }
+
+    public void delete(int val) {
+        if (head == null) { System.out.println("List is empty!"); return; }
+        if (head.data == val) { head = head.next; System.out.println(val + " deleted."); return; }
+        Node temp = head;
+        while (temp.next != null && temp.next.data != val) temp = temp.next;
+        if (temp.next == null) System.out.println(val + " not found!");
+        else { temp.next = temp.next.next; System.out.println(val + " deleted."); }
+    }
+
+    public void search(int val) {
+        Node temp = head;
+        int pos = 0;
+        while (temp != null) {
+            if (temp.data == val) { System.out.println(val + " found at position " + pos); return; }
+            temp = temp.next;
+            pos++;
+        }
+        System.out.println(val + " not found!");
+    }
+
+    public void display() {
+        if (head == null) { System.out.println("List is empty!"); return; }
+        System.out.print("Linked List: ");
+        Node temp = head;
+        while (temp != null) { System.out.print(temp.data + " -> "); temp = temp.next; }
+        System.out.println("null");
     }
 }

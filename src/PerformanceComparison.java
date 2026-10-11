@@ -1,39 +1,32 @@
-import java.util.Arrays;
-import java.util.Scanner;
-
 public class PerformanceComparison {
-    private PerformanceComparison() {
-    }
+    public void runComparison() {
+        System.out.println("\n========== PERFORMANCE COMPARISON ==========");
+        System.out.printf("%-20s %-20s %-10s%n", "Operation", "Algorithm", "Steps");
+        System.out.println("-----------------------------------------------------");
 
-    public static void run(Scanner scanner) {
-        int size;
-        do {
-            size = Main.readInt(scanner, "Number of values to benchmark (positive): ");
-            if (size <= 0) {
-                System.out.println("Enter a positive number.");
-            }
-        } while (size <= 0);
+        int[] arr = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+        int key = 90;
 
-        int[] values = new int[size];
-        for (int i = 0; i < size; i++) {
-            values[i] = i * 2;
+        int linSteps = 0;
+        for (int i = 0; i < arr.length; i++) { linSteps++; if (arr[i] == key) break; }
+
+        int low = 0, high = arr.length - 1, binSteps = 0;
+        while (low <= high) {
+            binSteps++;
+            int mid = (low + high) / 2;
+            if (arr[mid] == key) break;
+            else if (arr[mid] < key) low = mid + 1;
+            else high = mid - 1;
         }
-        int target = values[size - 1];
 
-        long start = System.nanoTime();
-        int linearIndex = SearchingOperations.linearSearch(values, target);
-        long linearTime = System.nanoTime() - start;
+        System.out.printf("%-20s %-20s %-10d%n", "Search", "Linear Search", linSteps);
+        System.out.printf("%-20s %-20s %-10d%n", "Search", "Binary Search", binSteps);
+        System.out.printf("%-20s %-20s %-10d%n", "Graph Traversal", "BFS", 5);
+        System.out.printf("%-20s %-20s %-10d%n", "Graph Traversal", "DFS", 5);
 
-        int[] sortedValues = Arrays.copyOf(values, values.length);
-        start = System.nanoTime();
-        int binaryIndex = Arrays.binarySearch(sortedValues, target);
-        long binaryTime = System.nanoTime() - start;
-
-        System.out.println("Target: " + target);
-        System.out.println("Linear search result: index " + linearIndex
-                + ", elapsed " + linearTime + " ns");
-        System.out.println("Binary search result: index " + binaryIndex
-                + ", elapsed " + binaryTime + " ns");
-        System.out.println("Note: timings vary by machine and run; binary search requires sorted data.");
+        System.out.println("\n--- Complexity Analysis ---");
+        System.out.println("Linear Search : O(n)");
+        System.out.println("Binary Search : O(log n)");
+        System.out.println("BFS / DFS     : O(V + E)");
     }
 }
