@@ -1,52 +1,72 @@
-# CIT300 Data Structure and Graph Analyzer
+# CIT300 Graded Practical Assignment 2
+# Data Structure & Graph Analyzer
 
-A console-based Java project for practicing common data structures, searching
-algorithms, and graph traversal.
+## Project Description
+Java console-based application demonstrating Array, Stack, Queue, Linked List, Searching, and Graph (BFS/DFS) with performance comparison and complexity analysis.
 
-## Requirements
+## Group Member Details
 
-- Java Development Kit (JDK) 8 or newer
+| Member | Student Name | Student ID | Assigned Responsibility | Individual Contribution |
+|--------|-------------|-----------|------------------------|------------------------|
+| Member 1 | AMF. Hana | 23da2-0674 | Array & Searching | Implemented ArrayOperations.java (insert, delete, search, display) and SearchingOperations.java (linear search, binary search, comparison). Tested both modules. |
+| Member 2 | IL. Asjatha | 23da2-1088 | Stack & Queue | Implemented StackOperations.java (push, pop, peek, display) and QueueOperations.java (enqueue, dequeue, peek, display). Handled overflow/underflow conditions. |
+| Member 3 | MA. Aysha Banu | 23da2-0866 | Linked List & Graph | Implemented LinkedListOperations.java (insert, delete, search, display) and GraphOperations.java (add vertex, add edge, display, BFS, DFS). Tested graph traversal. |
+| Member 4 | AM. Safra Julla | 23da2-0527 | Integration & Performance | Implemented Main.java (menu integration), PerformanceComparison.java, input validation. Integrated all modules and tested complete system. |
 
-## Project structure
+## Technologies Used
+- Java (JDK 17+)
+- Console-based UI
+- Java Collections Framework (for Graph BFS/DFS)
+- Git & GitHub for collaboration
 
-```text
-CIT300_Project/
-├── src/
-│   ├── Main.java
-│   ├── ArrayOperations.java
-│   ├── SearchingOperations.java
-│   ├── StackOperations.java
-│   ├── QueueOperations.java
-│   ├── LinkedListOperations.java
-│   ├── GraphOperations.java
-│   └── PerformanceComparison.java
-├── .gitignore
-└── README.md
-```
+## Main System Features
 
-## Compile and run
+### Array Operations
+- Insert element
+- Delete element
+- Search element
+- Display array
 
-From the project root, compile the source files and run the main menu:
+### Stack Operations
+- Push
+- Pop
+- Peek
+- Display
+- Handles overflow/underflow
 
-```sh
-javac -d out src/*.java
-java -cp out Main
-```
+### Queue Operations
+- Enqueue
+- Dequeue
+- Peek/Front
+- Display
+- Handles empty queue
 
-On Windows Command Prompt, the equivalent compile command is:
+### Linked List Operations
+- Insert
+- Delete
+- Search
+- Display
 
-```bat
-javac -d out src\*.java
-java -cp out Main
-```
+### Searching Operations
+- Linear Search (O(n))
+- Binary Search (O(log n))
+- Compare Both (steps + time)
 
-## Features
+### Graph Operations
+- Add Vertex
+- Add Edge
+- Display Graph
+- BFS Traversal (O(V + E))
+- DFS Traversal (O(V + E))
 
-- Create, update, display, and sort integer arrays
-- Search for values linearly and with binary search (on a sorted copy)
-- Perform push, pop, peek, and display operations on a stack
-- Perform enqueue, dequeue, peek, and display operations on a queue
-- Insert, remove, search, and display linked-list values
-- Build an undirected graph and display its adjacency list
-- Traverse a graph with breadth-first search (BFS) and depth-first search (DFS)
-- Compare linear and binary search timings on generated sorted data
+### Performance Comparison
+- Linear Search vs Binary Search
+- Steps count
+- Execution time
+- Complexity explanation
+
+## How to Run the Program
+
+### Compile
+```bash
+javac src/*.java -d out
